@@ -143,7 +143,8 @@ if __name__ == "__main__":
         AddPlugin('https://github.com/altercation/vim-colors-solarized.git', dir_bundle),
         AddPlugin('https://github.com/29decibel/codeschool-vim-theme.git', dir_bundle),
         AddPlugin('https://github.com/noahfrederick/vim-hemisu.git', dir_bundle),
-        AddPlugin('https://github.com/tomasr/molokai.git', dir_bundle)
+        AddPlugin('https://github.com/tomasr/molokai.git', dir_bundle),
+        AddPlugin('https://github.com/dkucinskas/vim-javascript.git', dir_bundle)
     ]
 
     success = True
