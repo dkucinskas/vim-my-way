@@ -34,6 +34,9 @@ set shiftwidth=4
 set expandtab " replaces tabs with spaces 
 set backspace=indent,eol,start						" backspace throuht everything in insert mode
 
+"" Spelling
+set spell
+
 "" Colorscheme
 "set background=dark
 set background=light
