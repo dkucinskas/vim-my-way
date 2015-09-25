@@ -2,10 +2,7 @@ import os
 import sys
 import subprocess
 import urllib.request
-
-
-# import zipfile
-# import re
+import zipfile
 
 
 class Task(object):
@@ -120,6 +117,38 @@ class CleanEOL(Task):
         self.success = True
 
 
+class Unzip(Task):
+    def __init__(self, archive, out_dir):
+        super(Unzip, self).__init__("Unzip file: '%s' into directory: '%s'" % (archive, out_dir))
+        self.archive = archive
+        self.out_dir = out_dir
+
+    def do(self):
+        zfile = zipfile.ZipFile(self.archive)
+        for name in zfile.namelist():
+            (dirname, filename) = os.path.split(name)
+            print("Decompressing filename: '%s' into directory: '%s'" % (filename, dirname))
+            full_path = os.path.join(self.out_dir, dirname)
+            if not os.path.exists(dirname):
+                os.makedirs(dirname)
+            zfile.extract(name, full_path)
+
+        self.success = True
+
+
+class WinRunRegFile(Task):
+    def __init__(self, path_src):
+        super(WinRunRegFile, self).__init__("Run reg file: '%s'" % path_src)
+        self.path_src = path_src
+
+    def do(self):
+        if sys.platform.startswith('win32'):
+            cmd = 'regedit /s "{0}"'
+            self.success = subprocess.call(cmd.format(self.path_src), shell=True) == 0
+        # elif sys.platform.startswith('linux'):
+        #    self.success = subprocess.call('cp {0} {1}'.format(self.path_src, self.path_des), shell=True) == 0
+
+
 if __name__ == "__main__":
 
     dir_source = os.path.dirname(os.path.abspath(__file__))
@@ -136,10 +165,20 @@ if __name__ == "__main__":
 
     dir_bundle = os.path.join(dir_output, 'bundle')
     dir_autoload = os.path.join(dir_output, 'autoload')
+    dir_fonts = os.path.join(dir_bundle, 'fonts')
+    dir_font_envy = os.path.join(dir_fonts, 'envy-code-r')
 
-    url_pathogen = 'https://tpo.pe/pathogen.vim'
     # url_pathogen ='https://raw.github.com/tpope/vim-pathogen/master/autoload/pathogen.vim'
+    url_pathogen = 'https://tpo.pe/pathogen.vim'
     file_pathogen = os.path.join(dir_autoload, 'pathogen.vim')
+
+    url_envy_code_r = 'http://download.damieng.com/fonts/original/EnvyCodeR-PR7.zip'
+    file_envy_code_r_zip = os.path.join(dir_fonts, 'EnvyCodeR-PR7.zip')
+    dir_envy_code_r = os.path.join(dir_fonts, 'Envy Code R PR7', 'Envy Code R PR7')
+    file_envy_code_r_font_1 = os.path.join(dir_envy_code_r, 'Envy Code R.ttf')
+    file_envy_code_r_font_2 = os.path.join(dir_envy_code_r, 'Envy Code R Bold.ttf')
+    file_envy_code_r_font_3 = os.path.join(dir_envy_code_r, 'Envy Code R Italic.ttf')
+    file_envy_code_r_reg = os.path.join(dir_envy_code_r, 'Envy Code R Command Prompt.reg')
 
     tasks = [
         MakeDirectory(dir_output),
@@ -154,8 +193,20 @@ if __name__ == "__main__":
         AddPlugin('https://github.com/29decibel/codeschool-vim-theme.git', dir_bundle),
         AddPlugin('https://github.com/noahfrederick/vim-hemisu.git', dir_bundle),
         AddPlugin('https://github.com/tomasr/molokai.git', dir_bundle),
-        AddPlugin('https://github.com/dkucinskas/vim-javascript.git', dir_bundle)
+        AddPlugin('https://github.com/dkucinskas/vim-javascript.git', dir_bundle),
+        AddPlugin('https://github.com/kien/ctrlp.vim.git', dir_bundle),
     ]
+
+    # windows specific steps
+    if sys.platform.startswith('win32'):
+        tasks.append(MakeDirectory(dir_fonts))
+        tasks.append(DownloadFile(url_envy_code_r, file_envy_code_r_zip))
+        tasks.append(Unzip(file_envy_code_r_zip, dir_fonts))
+        tasks.append(CopyFile(file_envy_code_r_font_1, '%systemroot%/fonts'))
+        tasks.append(CopyFile(file_envy_code_r_font_2, '%systemroot%/fonts'))
+        tasks.append(CopyFile(file_envy_code_r_font_3, '%systemroot%/fonts'))
+        # this won't work go to font dir and run font install manually
+        # tasks.append(WinRunRegFile(file_envy_code_r_reg))
 
     success = True
     for task in tasks:

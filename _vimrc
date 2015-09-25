@@ -39,12 +39,12 @@ set backspace=indent,eol,start						" backspace throuht everything in insert mod
 set spell
 
 "" Colorscheme
-"set background=dark
-set background=light
+set background=dark
+"set background=light
 "colo codeschool
 "colo github
-colo hemisu
-"colo molokai
+"colo hemisu
+colo molokai
 "colo solarized
 
 "if has('autocmd')
@@ -59,7 +59,8 @@ if has('gui_running')
 	set guioptions-=r								" remove right-hand scroll bar
 	
 	if has('gui_win32')
-		set guifont=Consolas:h10:cANSI
+		"set guifont=Consolas:h10:cANSI
+		set Envy\ Code\ R:h11:cANSI
 	elseif has('gui_gtk')
 		"set guifont=Inconsolata\ 12
 		"set guifont=Droid\ Sans\ Mono\ 12
