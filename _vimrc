@@ -60,7 +60,7 @@ if has('gui_running')
 	
 	if has('gui_win32')
 		"set guifont=Consolas:h10:cANSI
-		set Envy\ Code\ R:h11:cANSI
+		set guifont=Envy\ Code\ R:h11:cANSI
 	elseif has('gui_gtk')
 		"set guifont=Inconsolata\ 12
 		"set guifont=Droid\ Sans\ Mono\ 12
