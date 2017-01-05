@@ -195,6 +195,7 @@ if __name__ == "__main__":
         AddPlugin('https://github.com/tomasr/molokai.git', dir_bundle),
         AddPlugin('https://github.com/dkucinskas/vim-javascript.git', dir_bundle),
         AddPlugin('https://github.com/kien/ctrlp.vim.git', dir_bundle),
+        AddPlugin('https://github.com/rust-lang/rust.vim.git', dir_bundle),
     ]
 
     # windows specific steps
